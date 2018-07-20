@@ -7,8 +7,6 @@
 
     public interface IMyProjector : IMyFunctionalBlock, IMyTerminalBlock, IMyCubeBlock, IMyEntity
     {
-        bool LoadBlueprint(string name);
-        bool LoadRandomBlueprint(string searchPattern);
         void UpdateOffsetAndRotation();
 
         int BuildableBlocksCount { get; }

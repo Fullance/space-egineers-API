@@ -33,8 +33,6 @@
         void ChangeGridOwnership(long playerId, MyOwnershipShareModeEnum shareMode);
         void ClearSymmetries();
         void ColorBlocks(Vector3I min, Vector3I max, Vector3 newHSV);
-        [Obsolete("Use IMyCubeGrid.Static instead.")]
-        void ConvertToDynamic();
         void FixTargetCube(out Vector3I cube, Vector3 fractionalGridPosition);
         void GetBlocks(List<VRage.Game.ModAPI.IMySlimBlock> blocks, Func<VRage.Game.ModAPI.IMySlimBlock, bool> collect = null);
         List<VRage.Game.ModAPI.IMySlimBlock> GetBlocksInsideSphere(ref BoundingSphereD sphere);
@@ -44,6 +42,8 @@
         bool GetLineIntersectionExactGrid(ref LineD line, ref Vector3I position, ref double distanceSquared);
         bool IsTouchingAnyNeighbor(Vector3I min, Vector3I max);
         VRage.Game.ModAPI.IMyCubeGrid MergeGrid_MergeBlock(VRage.Game.ModAPI.IMyCubeGrid gridToMerge, Vector3I gridOffset);
+        [Obsolete("Use IMyCubeGrid.Static instead.")]
+        void OnConvertToDynamic();
         Vector3I? RayCastBlocks(Vector3D worldStart, Vector3D worldEnd);
         void RayCastCells(Vector3D worldStart, Vector3D worldEnd, List<Vector3I> outHitPositions, Vector3I? gridSizeInflate = new Vector3I?(), bool havokWorld = false);
         void RazeBlock(Vector3I position);

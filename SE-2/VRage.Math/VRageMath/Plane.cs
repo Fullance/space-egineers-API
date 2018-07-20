@@ -50,7 +50,25 @@
             float num7 = (num2 * num6) - (num3 * num5);
             float num8 = (num3 * num4) - (num * num6);
             float num9 = (num * num5) - (num2 * num4);
-            float num10 = 1f / ((float) Math.Sqrt(((num7 * num7) + (num8 * num8)) + (num9 * num9)));
+            float num10 = 1f / ((float) Math.Sqrt((double) (((num7 * num7) + (num8 * num8)) + (num9 * num9))));
+            this.Normal.X = num7 * num10;
+            this.Normal.Y = num8 * num10;
+            this.Normal.Z = num9 * num10;
+            this.D = -(((this.Normal.X * point1.X) + (this.Normal.Y * point1.Y)) + (this.Normal.Z * point1.Z));
+        }
+
+        public Plane(ref Vector3 point1, ref Vector3 point2, ref Vector3 point3)
+        {
+            float num = point2.X - point1.X;
+            float num2 = point2.Y - point1.Y;
+            float num3 = point2.Z - point1.Z;
+            float num4 = point3.X - point1.X;
+            float num5 = point3.Y - point1.Y;
+            float num6 = point3.Z - point1.Z;
+            float num7 = (num2 * num6) - (num3 * num5);
+            float num8 = (num3 * num4) - (num * num6);
+            float num9 = (num * num5) - (num2 * num4);
+            float num10 = 1f / ((float) Math.Sqrt((double) (((num7 * num7) + (num8 * num8)) + (num9 * num9))));
             this.Normal.X = num7 * num10;
             this.Normal.Y = num8 * num10;
             this.Normal.Z = num9 * num10;

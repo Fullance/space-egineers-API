@@ -6,7 +6,7 @@
 
     public interface IMyDecalProxy
     {
-        void AddDecals(MyHitInfo hitInfo, MyStringHash source, object customdata, IMyDecalHandler decalHandler, MyStringHash material);
+        void AddDecals(ref MyHitInfo hitInfo, MyStringHash source, object customdata, IMyDecalHandler decalHandler, MyStringHash material);
     }
 }
 

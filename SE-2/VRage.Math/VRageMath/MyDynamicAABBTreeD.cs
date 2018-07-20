@@ -568,11 +568,16 @@
             }
         }
 
+        public bool IsRootNull() => 
+            (this.m_root == -1);
+
         public bool MoveProxy(int proxyId, ref BoundingBoxD aabb, Vector3D displacement)
         {
             using (this.m_rwLock.AcquireExclusiveUsing())
             {
-                if (this.m_nodes[proxyId].Aabb.Contains(aabb) == ContainmentType.Contains)
+                ContainmentType type;
+                this.m_nodes[proxyId].Aabb.Contains(ref aabb, out type);
+                if (type == ContainmentType.Contains)
                 {
                     return false;
                 }
@@ -631,6 +636,46 @@
                         {
                             DynamicTreeNode node = this.m_nodes[index];
                             if (node.Aabb.Intersects((BoundingBoxD) bbox))
+                            {
+                                if (node.IsLeaf())
+                                {
+                                    if ((this.GetUserFlag(index) & requiredFlags) == requiredFlags)
+                                    {
+                                        elementsList.Add(this.GetUserData<T>(index));
+                                    }
+                                }
+                                else
+                                {
+                                    stack.Push(node.Child1);
+                                    stack.Push(node.Child2);
+                                }
+                            }
+                        }
+                    }
+                    this.PushStack(stack);
+                }
+            }
+        }
+
+        public void OverlapAllBoundingBox<T>(ref MyOrientedBoundingBoxD obb, List<T> elementsList, uint requiredFlags = 0, bool clear = true)
+        {
+            if (clear)
+            {
+                elementsList.Clear();
+            }
+            if (this.m_root != -1)
+            {
+                using (this.m_rwLock.AcquireSharedUsing())
+                {
+                    Stack<int> stack = this.GetStack();
+                    stack.Push(this.m_root);
+                    while (stack.Count > 0)
+                    {
+                        int index = stack.Pop();
+                        if (index != -1)
+                        {
+                            DynamicTreeNode node = this.m_nodes[index];
+                            if (obb.Intersects(ref node.Aabb))
                             {
                                 if (node.IsLeaf())
                                 {
@@ -1227,6 +1272,38 @@
                     {
                         DynamicTreeNode node = this.m_nodes[index];
                         if (node.Aabb.Intersects((BoundingBoxD) aabb))
+                        {
+                            if (node.IsLeaf())
+                            {
+                                if (callback(index))
+                                {
+                                    continue;
+                                }
+                                return;
+                            }
+                            stack.Push(node.Child1);
+                            stack.Push(node.Child2);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void QueryPoint(Func<int, bool> callback, ref Vector3D point)
+        {
+            using (this.m_rwLock.AcquireSharedUsing())
+            {
+                Stack<int> stack = this.GetStack();
+                stack.Push(this.m_root);
+                while (stack.Count > 0)
+                {
+                    int index = stack.Pop();
+                    if (index != -1)
+                    {
+                        ContainmentType type;
+                        DynamicTreeNode node = this.m_nodes[index];
+                        node.Aabb.Contains(ref point, out type);
+                        if (type != ContainmentType.Disjoint)
                         {
                             if (node.IsLeaf())
                             {

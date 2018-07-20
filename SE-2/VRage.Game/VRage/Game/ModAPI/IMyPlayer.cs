@@ -19,7 +19,7 @@
         void RemoveGrid(long gridEntityId);
         void SetDefaultColors();
         void SpawnAt(MatrixD worldMatrix, Vector3 velocity, IMyEntity spawnedBy);
-        void SpawnAt(MatrixD worldMatrix, Vector3 velocity, IMyEntity spawnedBy, bool findFreePlace = true);
+        void SpawnAt(MatrixD worldMatrix, Vector3 velocity, IMyEntity spawnedBy, bool findFreePlace = true, string modelName = null, Color? color = new Color?());
         void SpawnIntoCharacter(IMyCharacter character);
 
         List<Vector3> BuildColorSlots { get; set; }

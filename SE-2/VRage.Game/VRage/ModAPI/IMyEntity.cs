@@ -34,6 +34,7 @@
         float GetDistanceBetweenCameraAndBoundingSphere();
         float GetDistanceBetweenCameraAndPosition();
         string GetFriendlyName();
+        bool GetIntersectionWithAABB(ref BoundingBoxD aabb);
         bool GetIntersectionWithLine(ref LineD line, out MyIntersectionResultLineTriangleEx? tri, IntersectionFlags flags);
         Vector3? GetIntersectionWithLineAndBoundingSphere(ref LineD line, float boundingSphereRadiusMultiplier);
         bool GetIntersectionWithSphere(ref BoundingSphereD sphere);
@@ -44,7 +45,7 @@
         float GetSmallestDistanceBetweenCameraAndBoundingSphere();
         MyEntitySubpart GetSubpart(string name);
         VRage.ModAPI.IMyEntity GetTopMostParent(Type type = null);
-        void GetTrianglesIntersectingSphere(ref BoundingSphereD sphere, Vector3? referenceNormalVector, float? maxAngle, List<MyTriangle_Vertex_Normals> retTriangles, int maxNeighbourTriangles);
+        void GetTrianglesIntersectingSphere(ref BoundingSphere sphere, Vector3? referenceNormalVector, float? maxAngle, List<MyTriangle_Vertex_Normals> retTriangles, int maxNeighbourTriangles);
         MatrixD GetViewMatrix();
         MatrixD GetWorldMatrixNormalizedInv();
         bool IsVisible();
@@ -58,7 +59,7 @@
         void SetLocalMatrix(Matrix localMatrix, object source = null);
         void SetPosition(Vector3D pos);
         void SetWorldMatrix(MatrixD worldMatrix, object source = null);
-        void Teleport(MatrixD pos, object source = null);
+        void Teleport(MatrixD pos, object source = null, bool ignoreAssert = false);
         bool TryGetSubpart(string name, out MyEntitySubpart subpart);
         [Obsolete("Only used during Sandbox removal.")]
         void UpdateGamePruningStructure();

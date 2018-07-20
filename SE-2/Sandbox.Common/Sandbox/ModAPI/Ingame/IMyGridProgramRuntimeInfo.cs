@@ -4,17 +4,15 @@
 
     public interface IMyGridProgramRuntimeInfo
     {
-        int CurrentInstructionCount { get; }
+        int CurrentCallChainDepth { get; }
 
-        [Obsolete("This property no longer holds any meaning.")]
-        int CurrentMethodCallCount { get; }
+        int CurrentInstructionCount { get; }
 
         double LastRunTimeMs { get; }
 
-        int MaxInstructionCount { get; }
+        int MaxCallChainDepth { get; }
 
-        [Obsolete("This property no longer holds any meaning.")]
-        int MaxMethodCallCount { get; }
+        int MaxInstructionCount { get; }
 
         TimeSpan TimeSinceLastRun { get; }
 

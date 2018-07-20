@@ -8,6 +8,7 @@
 
     public interface IMyRemoteControl : IMyShipController, IMyTerminalBlock, IMyCubeBlock, IMyEntity
     {
+        void AddWaypoint(MyWaypointInfo coords);
         void AddWaypoint(Vector3D coords, string name);
         void ClearWaypoints();
         bool GetNearestPlayer(out Vector3D playerPosition);

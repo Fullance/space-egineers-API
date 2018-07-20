@@ -11,6 +11,8 @@
     {
         void Build(VRage.Game.ModAPI.IMySlimBlock cubeBlock, long owner, long builder, bool requestInstant);
         BuildCheckResult CanBuild(VRage.Game.ModAPI.IMySlimBlock projectedBlock, bool checkHavokIntersections);
+        bool LoadBlueprint(string name);
+        bool LoadRandomBlueprint(string searchPattern);
         void SetProjectedGrid(MyObjectBuilder_CubeGrid grid);
 
         VRage.Game.ModAPI.IMyCubeGrid ProjectedGrid { get; }

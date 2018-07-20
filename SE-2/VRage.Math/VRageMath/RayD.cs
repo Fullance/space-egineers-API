@@ -15,6 +15,12 @@
             this.Direction = direction;
         }
 
+        public RayD(ref Vector3D position, ref Vector3D direction)
+        {
+            this.Position = position;
+            this.Direction = direction;
+        }
+
         public static bool operator ==(RayD a, RayD b) => 
             (((((a.Position.X == b.Position.X) && (a.Position.Y == b.Position.Y)) && ((a.Position.Z == b.Position.Z) && (a.Direction.X == b.Direction.X))) && (a.Direction.Y == b.Direction.Y)) && (a.Direction.Z == b.Direction.Z));
 

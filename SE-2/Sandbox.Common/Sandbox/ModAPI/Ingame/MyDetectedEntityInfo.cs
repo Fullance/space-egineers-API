@@ -19,10 +19,6 @@
         public readonly long TimeStamp;
         public MyDetectedEntityInfo(long entityId, string name, MyDetectedEntityType type, Vector3D? hitPosition, MatrixD orientation, Vector3 velocity, MyRelationsBetweenPlayerAndBlock relationship, BoundingBoxD boundingBox, long timeStamp)
         {
-            if (timeStamp <= 0L)
-            {
-                throw new ArgumentException("Invalid Timestamp", "timeStamp");
-            }
             this.EntityId = entityId;
             this.Name = name;
             this.Type = type;
@@ -37,7 +33,7 @@
         public Vector3D Position =>
             this.BoundingBox.Center;
         public bool IsEmpty() => 
-            (this.TimeStamp == 0L);
+            (this.EntityId == 0L);
     }
 }
 

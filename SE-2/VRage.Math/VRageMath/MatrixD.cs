@@ -1907,12 +1907,18 @@
         public bool IsNan() => 
             double.IsNaN(((((((((((((((this.M11 + this.M12) + this.M13) + this.M14) + this.M21) + this.M22) + this.M23) + this.M24) + this.M31) + this.M32) + this.M33) + this.M34) + this.M41) + this.M42) + this.M43) + this.M44);
 
-        public bool IsOrthogonal() => 
-            (((((Math.Abs(this.Up.LengthSquared()) - 1.0) < 9.9999997473787516E-05) && ((Math.Abs(this.Right.LengthSquared()) - 1.0) < 9.9999997473787516E-05)) && (((Math.Abs(this.Forward.LengthSquared()) - 1.0) < 9.9999997473787516E-05) && (Math.Abs(this.Right.Dot(this.Up)) < 9.9999997473787516E-05))) && (Math.Abs(this.Right.Dot(this.Forward)) < 9.9999997473787516E-05));
+        public bool IsOrthogonal()
+        {
+            double epsilon = 0.0001;
+            return this.IsOrthogonal(epsilon);
+        }
+
+        public bool IsOrthogonal(double epsilon) => 
+            (((((Math.Abs(this.Up.LengthSquared()) - 1.0) < epsilon) && ((Math.Abs(this.Right.LengthSquared()) - 1.0) < epsilon)) && (((Math.Abs(this.Forward.LengthSquared()) - 1.0) < epsilon) && (Math.Abs(this.Right.Dot(this.Up)) < epsilon))) && (Math.Abs(this.Right.Dot(this.Forward)) < epsilon));
 
         public bool IsRotation()
         {
-            double num = 0.0099999997764825821;
+            double num = 0.01;
             if (!this.HasNoTranslationOrPerspective())
             {
                 return false;
@@ -2477,6 +2483,16 @@
             return xd;
         }
 
+        public void Orthogonalize()
+        {
+            Vector3D v = Vector3D.Normalize(this.Right);
+            Vector3D vectord2 = Vector3D.Normalize(this.Up - ((Vector3D) (v * this.Up.Dot(v))));
+            Vector3D vectord3 = Vector3D.Normalize((Vector3D) ((this.Backward - (v * this.Backward.Dot(v))) - (vectord2 * this.Backward.Dot(vectord2))));
+            this.Right = v;
+            this.Up = vectord2;
+            this.Backward = vectord3;
+        }
+
         public static MatrixD Orthogonalize(MatrixD rotationMatrix)
         {
             MatrixD xd = rotationMatrix;
@@ -2498,6 +2514,13 @@
             matrix.M31 *= scale;
             matrix.M32 *= scale;
             matrix.M33 *= scale;
+        }
+
+        [UnsharperDisableReflection]
+        public static MatrixD Rescale(MatrixD matrix, double scale)
+        {
+            Rescale(ref matrix, scale);
+            return matrix;
         }
 
         [UnsharperDisableReflection]
@@ -2526,13 +2549,6 @@
             matrix.M31 *= scale.Z;
             matrix.M32 *= scale.Z;
             matrix.M33 *= scale.Z;
-        }
-
-        [UnsharperDisableReflection]
-        public static MatrixD Rescale(MatrixD matrix, double scale)
-        {
-            Rescale(ref matrix, scale);
-            return matrix;
         }
 
         [UnsharperDisableReflection]
@@ -3013,6 +3029,9 @@
             }
         }
 
+        public Matrix3x3 Rotation =>
+            new Matrix3x3((float) this.M11, (float) this.M12, (float) this.M13, (float) this.M21, (float) this.M22, (float) this.M23, (float) this.M31, (float) this.M32, (float) this.M33);
+
         public Vector3D Scale =>
             new Vector3D(this.Right.Length(), this.Up.Length(), this.Forward.Length());
 
@@ -3056,9 +3075,9 @@
         private struct F16
         {
             [FixedBuffer(typeof(double), 0x10)]
-            public <data>e__FixedBuffer0 data;
-            [StructLayout(LayoutKind.Sequential, Size=0x80), UnsafeValueType, CompilerGenerated]
-            public struct <data>e__FixedBuffer0
+            public <data>e__FixedBuffer1 data;
+            [StructLayout(LayoutKind.Sequential, Size=0x80), CompilerGenerated, UnsafeValueType]
+            public struct <data>e__FixedBuffer1
             {
                 public double FixedElementField;
             }

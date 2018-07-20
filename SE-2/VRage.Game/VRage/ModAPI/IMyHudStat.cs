@@ -5,6 +5,7 @@
 
     public interface IMyHudStat
     {
+        string GetValueString();
         void Update();
 
         float CurrentValue { get; }

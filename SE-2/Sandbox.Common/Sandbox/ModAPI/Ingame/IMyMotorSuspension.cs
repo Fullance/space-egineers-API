@@ -9,7 +9,7 @@
 
         bool Brake { get; set; }
 
-        [废弃]
+        [Obsolete]
         float Damping { get; }
 
         float Friction { get; set; }
@@ -30,15 +30,15 @@
 
         bool Steering { get; set; }
 
-        [废弃]
+        [Obsolete]
         float SteerReturnSpeed { get; }
 
-        [废弃]
+        [Obsolete]
         float SteerSpeed { get; }
 
         float Strength { get; set; }
 
-        [废弃]
+        [Obsolete]
         float SuspensionTravel { get; }
     }
 }

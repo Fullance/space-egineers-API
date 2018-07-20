@@ -21,6 +21,10 @@
 
         public static ITerminalProperty<TValue> Cast<TValue>(this ITerminalProperty property)
         {
+            if (property == null)
+            {
+                throw new InvalidOperationException("Invalid property");
+            }
             ITerminalProperty<TValue> property2 = property.As<TValue>();
             if (property2 == null)
             {

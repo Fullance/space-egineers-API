@@ -523,6 +523,47 @@
             }
         }
 
+        public static void CreateFromRotationMatrix(ref Matrix3x3 matrix, out Quaternion result)
+        {
+            float num = (matrix.M11 + matrix.M22) + matrix.M33;
+            if (num > 0.0)
+            {
+                float num2 = (float) Math.Sqrt(num + 1.0);
+                result.W = num2 * 0.5f;
+                float num3 = 0.5f / num2;
+                result.X = (matrix.M23 - matrix.M32) * num3;
+                result.Y = (matrix.M31 - matrix.M13) * num3;
+                result.Z = (matrix.M12 - matrix.M21) * num3;
+            }
+            else if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
+            {
+                float num4 = (float) Math.Sqrt(((1.0 + matrix.M11) - matrix.M22) - matrix.M33);
+                float num5 = 0.5f / num4;
+                result.X = 0.5f * num4;
+                result.Y = (matrix.M12 + matrix.M21) * num5;
+                result.Z = (matrix.M13 + matrix.M31) * num5;
+                result.W = (matrix.M23 - matrix.M32) * num5;
+            }
+            else if (matrix.M22 > matrix.M33)
+            {
+                float num6 = (float) Math.Sqrt(((1.0 + matrix.M22) - matrix.M11) - matrix.M33);
+                float num7 = 0.5f / num6;
+                result.X = (matrix.M21 + matrix.M12) * num7;
+                result.Y = 0.5f * num6;
+                result.Z = (matrix.M32 + matrix.M23) * num7;
+                result.W = (matrix.M31 - matrix.M13) * num7;
+            }
+            else
+            {
+                float num8 = (float) Math.Sqrt(((1.0 + matrix.M33) - matrix.M11) - matrix.M22);
+                float num9 = 0.5f / num8;
+                result.X = (matrix.M31 + matrix.M13) * num9;
+                result.Y = (matrix.M32 + matrix.M23) * num9;
+                result.Z = 0.5f * num8;
+                result.W = (matrix.M12 - matrix.M21) * num9;
+            }
+        }
+
         public static float Dot(Quaternion quaternion1, Quaternion quaternion2) => 
             ((((quaternion1.X * quaternion2.X) + (quaternion1.Y * quaternion2.Y)) + (quaternion1.Z * quaternion2.Z)) + (quaternion1.W * quaternion2.W));
 

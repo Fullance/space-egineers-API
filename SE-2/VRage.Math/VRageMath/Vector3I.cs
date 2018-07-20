@@ -117,6 +117,13 @@
             this.Z = (int) z;
         }
 
+        public Vector3I(byte[] bytes, int index)
+        {
+            this.X = BitConverter.ToInt32(bytes, index);
+            this.Y = BitConverter.ToInt32(bytes, index + 4);
+            this.Z = BitConverter.ToInt32(bytes, index + 8);
+        }
+
         public static explicit operator Vector3I(Vector3 value) => 
             new Vector3I((int) value.X, (int) value.Y, (int) value.Z);
 
@@ -556,6 +563,9 @@
         public static implicit operator Vector3D(Vector3I value) => 
             new Vector3D((double) value.X, (double) value.Y, (double) value.Z);
 
+        public static implicit operator Vector3L(Vector3I value) => 
+            new Vector3L((long) value.X, (long) value.Y, (long) value.Z);
+
         public static void Transform(ref Vector3I position, ref Matrix matrix, out Vector3I result)
         {
             int num = (((position.X * ((int) Math.Round((double) matrix.M11))) + (position.Y * ((int) Math.Round((double) matrix.M21)))) + (position.Z * ((int) Math.Round((double) matrix.M31)))) + ((int) Math.Round((double) matrix.M41));
@@ -760,6 +770,13 @@
                 }
                 iteratorVariable0.Z++;
             }
+        }
+
+        public void ToBytes(List<byte> result)
+        {
+            result.AddRange(BitConverter.GetBytes(this.X));
+            result.AddRange(BitConverter.GetBytes(this.Y));
+            result.AddRange(BitConverter.GetBytes(this.Z));
         }
 
         static Vector3I()

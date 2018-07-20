@@ -29,6 +29,7 @@
         private static List<MyCluster> m_resultListPerThread;
         private List<MyCluster> m_returnedClusters = new List<MyCluster>(1);
         private MyDynamicAABBTreeD m_staticTree = new MyDynamicAABBTreeD(Vector3D.Zero, 1.0);
+        private bool m_suppressClusterReorder;
         private List<object> m_userObjects = new List<object>();
         public static Vector3 MaximumForSplit = ((Vector3) (IdealClusterSize * 2f));
         public static Vector3 MinimumDistanceFromBorder = ((Vector3) (IdealClusterSize / 10f));
@@ -412,33 +413,36 @@
                 {
                     BoundingBoxD aABB = data.AABB;
                     data.AABB = aabb;
-                    aabb = AdjustAABBByVelocity(aabb, velocity, 0f);
-                    ContainmentType type = data.Cluster.AABB.Contains(aabb);
-                    if (((type != ContainmentType.Contains) && !this.SingleCluster.HasValue) && !this.ForcedClusters)
+                    if (!this.m_suppressClusterReorder)
                     {
-                        if (type == ContainmentType.Disjoint)
+                        aabb = AdjustAABBByVelocity(aabb, velocity, 0f);
+                        ContainmentType type = data.Cluster.AABB.Contains(aabb);
+                        if (((type != ContainmentType.Contains) && !this.SingleCluster.HasValue) && !this.ForcedClusters)
                         {
-                            this.m_clusterTree.OverlapAllBoundingBox<MyCluster>(ref aabb, this.m_returnedClusters, 0, true);
-                            if ((this.m_returnedClusters.Count == 1) && (this.m_returnedClusters[0].AABB.Contains(aabb) == ContainmentType.Contains))
+                            if (type == ContainmentType.Disjoint)
                             {
-                                MyCluster cluster = data.Cluster;
-                                this.RemoveObjectFromCluster(data, false);
-                                if (cluster.Objects.Count == 0)
+                                this.m_clusterTree.OverlapAllBoundingBox<MyCluster>(ref aabb, this.m_returnedClusters, 0, true);
+                                if ((this.m_returnedClusters.Count == 1) && (this.m_returnedClusters[0].AABB.Contains(aabb) == ContainmentType.Contains))
                                 {
-                                    this.RemoveCluster(cluster);
+                                    MyCluster cluster = data.Cluster;
+                                    this.RemoveObjectFromCluster(data, false);
+                                    if (cluster.Objects.Count == 0)
+                                    {
+                                        this.RemoveCluster(cluster);
+                                    }
+                                    this.AddObjectToCluster(this.m_returnedClusters[0], data.Id, false);
                                 }
-                                this.AddObjectToCluster(this.m_returnedClusters[0], data.Id, false);
+                                else
+                                {
+                                    aabb.InflateToMinimum(IdealClusterSize);
+                                    this.ReorderClusters(aabb.Include(aABB), id);
+                                }
                             }
                             else
                             {
                                 aabb.InflateToMinimum(IdealClusterSize);
                                 this.ReorderClusters(aabb.Include(aABB), id);
                             }
-                        }
-                        else
-                        {
-                            aabb.InflateToMinimum(IdealClusterSize);
-                            this.ReorderClusters(aabb.Include(aABB), id);
                         }
                     }
                 }
@@ -800,6 +804,16 @@
                     m_resultListPerThread = new List<MyCluster>();
                 }
                 return m_resultListPerThread;
+            }
+        }
+
+        public bool SuppressClusterReorder
+        {
+            get => 
+                this.m_suppressClusterReorder;
+            set
+            {
+                this.m_suppressClusterReorder = value;
             }
         }
 

@@ -71,7 +71,7 @@
         public bool Equals(RectangleF other) => 
             ((((other.X == this.X) && (other.Y == this.Y)) && (other.Width == this.Width)) && (other.Height == this.Height));
 
-        public static void Intersect(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
+        public static bool Intersect(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
         {
             float num = value1.X + value1.Width;
             float num2 = value2.X + value2.Width;
@@ -84,11 +84,10 @@
             if ((num7 > x) && (num8 > y))
             {
                 result = new RectangleF(x, y, num7 - x, num8 - y);
+                return true;
             }
-            else
-            {
-                result = new RectangleF(0f, 0f, 0f, 0f);
-            }
+            result = new RectangleF(0f, 0f, 0f, 0f);
+            return false;
         }
 
         public override bool Equals(object obj)

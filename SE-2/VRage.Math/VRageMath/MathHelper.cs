@@ -22,6 +22,7 @@
         public const float RadiansPerSecondToRPM = 9.549296f;
         public const float RPMToRadiansPerMillisec = 0.0001047198f;
         public const float RPMToRadiansPerSecond = 0.1047198f;
+        private const float SMOOTHING = 0.95f;
         public const float Sqrt2 = 1.414214f;
         public const float Sqrt3 = 1.732051f;
         public const float TwoPi = 6.283185f;
@@ -515,6 +516,12 @@
         public static float SCurve5(float t) => 
             (((t * t) * t) * ((t * ((t * 6f) - 15f)) + 10f));
 
+        public static int Smooth(int newValue, int lastSmooth) => 
+            ((int) ((lastSmooth * 0.95f) + (newValue * 0.05000001f)));
+
+        public static float Smooth(float newValue, float lastSmooth) => 
+            ((lastSmooth * 0.95f) + (newValue * 0.05000001f));
+
         public static double SmoothStep(double value1, double value2, double amount) => 
             Lerp(value1, value2, SCurve3(amount));
 
@@ -550,6 +557,9 @@
 
         public static float ToRadians(float degrees) => 
             (degrees * 0.01745329f);
+
+        public static Vector3 ToRadians(Vector3 v) => 
+            ((Vector3) (v * 0.01745329f));
 
         public static float WrapAngle(float angle)
         {

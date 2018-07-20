@@ -7,7 +7,7 @@
     using System.Runtime.InteropServices;
     using Unsharper;
 
-    [Serializable, StructLayout(LayoutKind.Sequential), ProtoContract, UnsharperDisableReflection]
+    [Serializable, StructLayout(LayoutKind.Sequential), UnsharperDisableReflection, ProtoContract]
     public struct Vector3 : IEquatable<Vector3>
     {
         public static Vector3 Zero;
@@ -360,7 +360,7 @@
         }
 
         public float Length() => 
-            ((float) Math.Sqrt(((this.X * this.X) + (this.Y * this.Y)) + (this.Z * this.Z)));
+            ((float) Math.Sqrt((double) (((this.X * this.X) + (this.Y * this.Y)) + (this.Z * this.Z))));
 
         public float LengthSquared() => 
             (((this.X * this.X) + (this.Y * this.Y)) + (this.Z * this.Z));
@@ -370,7 +370,7 @@
             float num = value1.X - value2.X;
             float num2 = value1.Y - value2.Y;
             float num3 = value1.Z - value2.Z;
-            return (float) Math.Sqrt(((num * num) + (num2 * num2)) + (num3 * num3));
+            return (float) Math.Sqrt((double) (((num * num) + (num2 * num2)) + (num3 * num3)));
         }
 
         public static void Distance(ref Vector3 value1, ref Vector3 value2, out float result)
@@ -419,7 +419,7 @@
         }
 
         public float Dot(Vector3 v) => 
-            Dot(this, v);
+            this.Dot(ref v);
 
         public float Dot(ref Vector3 v) => 
             (((this.X * v.X) + (this.Y * v.Y)) + (this.Z * v.Z));
@@ -429,7 +429,7 @@
 
         public float Normalize()
         {
-            float num = (float) Math.Sqrt(((this.X * this.X) + (this.Y * this.Y)) + (this.Z * this.Z));
+            float num = (float) Math.Sqrt((double) (((this.X * this.X) + (this.Y * this.Y)) + (this.Z * this.Z)));
             float num2 = 1f / num;
             this.X *= num2;
             this.Y *= num2;
@@ -440,7 +440,7 @@
         public static Vector3 Normalize(Vector3 value)
         {
             Vector3 vector;
-            float num = 1f / ((float) Math.Sqrt(((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z)));
+            float num = 1f / ((float) Math.Sqrt((double) (((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z))));
             vector.X = value.X * num;
             vector.Y = value.Y * num;
             vector.Z = value.Z * num;
@@ -459,7 +459,7 @@
 
         public static bool GetNormalized(ref Vector3 value)
         {
-            float num = (float) Math.Sqrt(((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z));
+            float num = (float) Math.Sqrt((double) (((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z)));
             if (num > 0.001f)
             {
                 float num2 = 1f / num;
@@ -470,7 +470,7 @@
 
         public static void Normalize(ref Vector3 value, out Vector3 result)
         {
-            float num = 1f / ((float) Math.Sqrt(((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z)));
+            float num = 1f / ((float) Math.Sqrt((double) (((value.X * value.X) + (value.Y * value.Y)) + (value.Z * value.Z))));
             result.X = value.X * num;
             result.Y = value.Y * num;
             result.Z = value.Z * num;
@@ -691,57 +691,72 @@
         {
             if (Math.Abs(value1.X) > Math.Abs(value1.Y))
             {
-                if (Math.Abs(value1.X) > Math.Abs(value1.Z))
-                {
-                    result = new Vector3(value1.X, 0f, 0f);
-                }
-                else
-                {
-                    result = new Vector3(0f, 0f, value1.Z);
-                }
-            }
-            else if (Math.Abs(value1.Y) > Math.Abs(value1.Z))
-            {
-                result = new Vector3(0f, value1.Y, 0f);
+                result = (Math.Abs(value1.X) > Math.Abs(value1.Z)) ? new Vector3(value1.X, 0f, 0f) : new Vector3(0f, 0f, value1.Z);
             }
             else
             {
-                result = new Vector3(0f, 0f, value1.Z);
+                result = (Math.Abs(value1.Y) > Math.Abs(value1.Z)) ? new Vector3(0f, value1.Y, 0f) : new Vector3(0f, 0f, value1.Z);
             }
         }
 
         public static Vector3 Clamp(Vector3 value1, Vector3 min, Vector3 max)
         {
-            Vector3 vector;
-            float x = value1.X;
-            float num2 = (x > max.X) ? max.X : x;
-            float num3 = (num2 < min.X) ? min.X : num2;
-            float y = value1.Y;
-            float num5 = (y > max.Y) ? max.Y : y;
-            float num6 = (num5 < min.Y) ? min.Y : num5;
-            float z = value1.Z;
-            float num8 = (z > max.Z) ? max.Z : z;
-            float num9 = (num8 < min.Z) ? min.Z : num8;
-            vector.X = num3;
-            vector.Y = num6;
-            vector.Z = num9;
+            Vector3 vector = value1;
+            if (value1.X > max.X)
+            {
+                vector.X = max.X;
+            }
+            else if (value1.X < min.X)
+            {
+                vector.X = min.X;
+            }
+            if (value1.Y > max.Y)
+            {
+                vector.Y = max.Y;
+            }
+            else if (value1.Y < min.Y)
+            {
+                vector.Y = min.Y;
+            }
+            if (value1.Z > max.Z)
+            {
+                vector.Z = max.Z;
+                return vector;
+            }
+            if (value1.Z < min.Z)
+            {
+                vector.Z = min.Z;
+            }
             return vector;
         }
 
         public static void Clamp(ref Vector3 value1, ref Vector3 min, ref Vector3 max, out Vector3 result)
         {
-            float x = value1.X;
-            float num2 = (x > max.X) ? max.X : x;
-            float num3 = (num2 < min.X) ? min.X : num2;
-            float y = value1.Y;
-            float num5 = (y > max.Y) ? max.Y : y;
-            float num6 = (num5 < min.Y) ? min.Y : num5;
-            float z = value1.Z;
-            float num8 = (z > max.Z) ? max.Z : z;
-            float num9 = (num8 < min.Z) ? min.Z : num8;
-            result.X = num3;
-            result.Y = num6;
-            result.Z = num9;
+            result = value1;
+            if (value1.X > max.X)
+            {
+                result.X = max.X;
+            }
+            else if (value1.X < min.X)
+            {
+                result.X = min.X;
+            }
+            if (value1.Y > max.Y)
+            {
+                result.Y = max.Y;
+            }
+            else if (value1.Y < min.Y)
+            {
+                result.Y = min.Y;
+            }
+            if (value1.Z > max.Z)
+            {
+                result.Z = max.Z;
+            }
+            else if (value1.Z < min.Z)
+            {
+                result.Z = min.Z;
+            }
         }
 
         public static Vector3 ClampToSphere(Vector3 vector, float radius)

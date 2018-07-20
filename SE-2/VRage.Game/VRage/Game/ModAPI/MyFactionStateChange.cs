@@ -15,7 +15,8 @@
         FactionMemberKick,
         FactionMemberPromote,
         FactionMemberDemote,
-        FactionMemberLeave
+        FactionMemberLeave,
+        FactionMemberNotPossibleJoin
     }
 }
 

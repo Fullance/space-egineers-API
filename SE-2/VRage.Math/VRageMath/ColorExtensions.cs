@@ -6,6 +6,9 @@
 
     public static class ColorExtensions
     {
+        public static VRageMath.Color Alpha(this VRageMath.Color c, float a) => 
+            new VRageMath.Color(c, a);
+
         public static Vector3 ColorToHSV(this VRageMath.Color rgb)
         {
             System.Drawing.Color color = System.Drawing.Color.FromArgb(rgb.R, rgb.G, rgb.B);
@@ -79,6 +82,9 @@
         public static Vector4 PremultiplyColor(this Vector4 c) => 
             new Vector4(c.X * c.W, c.Y * c.W, c.Z * c.W, c.W);
 
+        public static VRageMath.Color Shade(this VRageMath.Color c, float r) => 
+            new VRageMath.Color((int) (c.R * r), (int) (c.G * r), (int) (c.B * r), c.A);
+
         public static Vector3 TemperatureToRGB(float temperature)
         {
             Vector3 vector = new Vector3();
@@ -107,6 +113,9 @@
             vector.Z = (float) MathHelper.Saturate((double) ((0.543206789 * Math.Log((double) (temperature - 10f))) - 1.196254089));
             return vector;
         }
+
+        public static VRageMath.Color Tint(this VRageMath.Color c, float r) => 
+            new VRageMath.Color((int) (c.R + ((0xff - c.R) * r)), (int) (c.G + ((0xff - c.G) * r)), (int) (c.B + ((0xff - c.B) * r)), c.A);
 
         public static Vector3 ToGray(this Vector3 c) => 
             new Vector3(((0.2126f * c.X) + (0.7152f * c.Y)) + (0.0722f * c.Z));

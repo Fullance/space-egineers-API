@@ -2180,6 +2180,35 @@
             result.M44 = matrix1.M44 * num;
         }
 
+        public static void MultiplyRotation(ref Matrix matrix1, ref Matrix matrix2, out Matrix result)
+        {
+            float num = ((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31);
+            float num2 = ((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32);
+            float num3 = ((matrix1.M11 * matrix2.M13) + (matrix1.M12 * matrix2.M23)) + (matrix1.M13 * matrix2.M33);
+            float num4 = ((matrix1.M21 * matrix2.M11) + (matrix1.M22 * matrix2.M21)) + (matrix1.M23 * matrix2.M31);
+            float num5 = ((matrix1.M21 * matrix2.M12) + (matrix1.M22 * matrix2.M22)) + (matrix1.M23 * matrix2.M32);
+            float num6 = ((matrix1.M21 * matrix2.M13) + (matrix1.M22 * matrix2.M23)) + (matrix1.M23 * matrix2.M33);
+            float num7 = ((matrix1.M31 * matrix2.M11) + (matrix1.M32 * matrix2.M21)) + (matrix1.M33 * matrix2.M31);
+            float num8 = ((matrix1.M31 * matrix2.M12) + (matrix1.M32 * matrix2.M22)) + (matrix1.M33 * matrix2.M32);
+            float num9 = ((matrix1.M31 * matrix2.M13) + (matrix1.M32 * matrix2.M23)) + (matrix1.M33 * matrix2.M33);
+            result.M11 = num;
+            result.M12 = num2;
+            result.M13 = num3;
+            result.M14 = 0f;
+            result.M21 = num4;
+            result.M22 = num5;
+            result.M23 = num6;
+            result.M24 = 0f;
+            result.M31 = num7;
+            result.M32 = num8;
+            result.M33 = num9;
+            result.M34 = 0f;
+            result.M41 = 0f;
+            result.M42 = 0f;
+            result.M43 = 0f;
+            result.M44 = 1f;
+        }
+
         public static Matrix Negate(Matrix matrix)
         {
             Matrix matrix2;
@@ -2998,9 +3027,9 @@
         private struct F16
         {
             [FixedBuffer(typeof(float), 0x10)]
-            public <data>e__FixedBuffer1 data;
+            public <data>e__FixedBuffer2 data;
             [StructLayout(LayoutKind.Sequential, Size=0x40), CompilerGenerated, UnsafeValueType]
-            public struct <data>e__FixedBuffer1
+            public struct <data>e__FixedBuffer2
             {
                 public float FixedElementField;
             }
